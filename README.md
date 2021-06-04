@@ -57,6 +57,6 @@ DOMAIN_NAME=pihole.local
 docker-compose up -d
 ```
 ### Used for this repository:  
-[docker-pihole-unbound](https://github.com/vertrou/docker-pihole-unbound)
-[pihole-updatelists](https://github.com/jacklul/pihole-updatelists)
+- [docker-pihole-unbound](https://github.com/vertrou/docker-pihole-unbound) <br/>
+- [pihole-updatelists](https://github.com/jacklul/pihole-updatelists)
   
