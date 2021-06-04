@@ -12,5 +12,3 @@ COPY entrypoint.sh entrypoint.sh
 
 RUN chmod +x entrypoint.sh
 ENTRYPOINT ./entrypoint.sh
-
-#docker buildx build --platform linux/arm/v7 -t vertrou/pihole-unbound-test:latest --load
