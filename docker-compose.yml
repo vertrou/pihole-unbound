@@ -1,0 +1,54 @@
+version: "2"
+
+networks:
+    dns_net:
+        # use the bridge driver, but enable IPv6
+        driver: bridge
+        enable_ipv6: true
+        driver_opts:
+            com.docker.network.enable_ipv6: "true"
+        ipam:
+            driver: default
+            config:
+                - subnet: 17.20.0.0/16
+                  gateway: 17.20.0.1
+                - subnet: "fd00::2:0:0:0/80"
+                  gateway: fd00::2:0:0:1
+
+services:
+    pihole-unbound:
+        container_name: pihole-unbound
+        image: vertrou/pihole-unbound-test:latest
+        hostname: ${HOSTNAME}
+        domainname: ${DOMAIN_NAME}
+        networks:
+            dns_net:
+                ipv6_address: fd00::2:0:0:10
+                ipv4_address: 17.20.0.6
+        ports:
+            - "53:53/tcp"
+            - "53:53/udp"
+            - "67:67/udp"
+            - "8080:80/tcp"
+            # - 5335:5335/tcp # Uncomment to enable unbound access on local server
+            # - 22/tcp # Uncomment to enable SSH           
+        environment:
+            TZ: ${TZ}
+            ServerIP: ${ServerIP}
+            ServerIPv6: ${ServerIPv6}
+            WEBPASSWORD: ${WEBPASSWORD}
+            REV_SERVER: ${REV_SERVER}
+            REV_SERVER_TARGET: ${REV_SERVER_TARGET}
+            REV_SERVER_DOMAIN: ${REV_SERVER_DOMAIN}
+            REV_SERVER_CIDR: ${REV_SERVER_CIDR}
+            DNS1: 127.0.0.1#5335 # Hardcoded to our Unbound server
+            DNS2: 127.0.0.1#5335 # Hardcoded to our Unbound server
+            DNS3: ::1#5335 # Hardcoded to our Unbound server
+            DNS4: ::1#5335 # Hardcoded to our Unbound server
+            DNSSEC: "true" # Enable DNSSEC
+        volumes:
+            - '${PWD}/pihole-unbound/pihole/config/:/etc/pihole/'
+            - '${PWD}/pihole-unbound/pihole/dns/:/etc/dnsmasq.d/'
+            - '${PWD}/pihole-unbound/pihole/pihole-updatelists/:/etc/pihole-updatelists/'
+            - '${PWD}/pihole-unbound/unbound/:/opt/unbound/'
+        restart: unless-stopped
