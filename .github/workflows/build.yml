@@ -63,7 +63,7 @@ jobs:
         with:
           platforms: linux/arm/v7, linux/arm64/v8, linux/amd64
           push: true
-          context: .
+          context: /docker/.
           tags: |
             vertrou/pihole-unbound:latest
             vertrou/pihole-unbound:${{needs.create-release.outputs.version}}
